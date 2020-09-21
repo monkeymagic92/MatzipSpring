@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd"> <!-- 마이바티스 사용하려면 무조건 상단에 박아둬야하는  DOCTYPE-->
+<configuration>
+	<typeAliases>
+		<!-- 참고자료 : UserMapper.xml 보면됨 
+			즉, 저렇게 긴 주소명 적기싫을때 저주소명은 UserVO로 하겠다 란뜻
+		-->
+		<typeAlias type="com.koreait.matzip.user.model.UserVO" alias="UserVO" />
+		<typeAlias type="com.koreait.matzip.user.model.UserDMI" alias="UserDMI" />
+		<typeAlias type="com.koreait.matzip.user.model.UserPARAM" alias="UserPARAM" />
+		
+		
+		<typeAlias type="com.koreait.matzip.rest.model.RestVO" alias="RestVO" />
+		<typeAlias type="com.koreait.matzip.rest.model.RestDMI" alias="RestDMI" />
+		<typeAlias type="com.koreait.matzip.rest.model.RestPARAM" alias="RestPARAM" />
+	</typeAliases>	
+</configuration>

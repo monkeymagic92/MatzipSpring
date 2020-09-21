@@ -1,0 +1,59 @@
+09/21
+
+마이바티스 쿼리문 사용할때 $ / #의 중요성을 깨닫자
+어지간하면 스프링에서는 #을 사용하자 
+오늘 #때문에 에러났었음 ( user_id문자열 인식 못해가지고 )
+
+
+-	-	-	-	-	-	-	-	-	-	-	-
+
+
+☆ 주소 맵핑할때 경로 찾아가는 공식 ☆
+
+@RequestMapping("/rest")    = localhost:8089/rest
+@RequestMapping(value="/map")   = localhost:8089/rest/map 이렇게 보낸다는 것 
+
+즉, 우리가 항상 jsp할때 get메소드를 통해서 jsp view단을 열었으니까 직접 서블릿 -> 서블릿을 통해서
+접근한다고 보면됨
+
+첫번째 서블릿에서 두번째 서블릿으로 주소를 넘어가고 2번째 서블릿에서 jsp(view)단을 띄운다고 생각하면 됨
+
+팩트 ★!! 우리는 로그인 성공하고나서 다음 view단을 열기위해서는 두번째 서블릿 주솟값을 찾아 들어가야 열리는 거임 
+
+-	-	-	-	-	-	-	-	-	-	-	-
+
+컨트롤러 메소드에 return 주소값이랑 Const.VIEW 주소값이랑 헷갈린부분 해결 
+(학원에서 이해함)
+
+☆  참고 : RestController.java
+☆ 부참고 : menuTemp.jsp / RestContoller.java / restMap.jsp   
+
+
+현재 우리 템플릿jsp / 지도 jsp 
+
+model.addAttribute(Const.VIEW,"rest/restMap"); 
+return ViewRef.TEMP_MENU_TEMP;
+
+위에 부분 해석
+
+실제 return으로 TEMP_MENU_TEMP 쪽 주소값을 찾아 들어가서 
+그안에다가 model.addAttribute(Const.VIEW,"rest/restMap");  해줘서 실제로 템플릿jsp 안에 <include>"WEB-INF/${view}"</include>
+이쪽으로 들어간다고 생각하면 됨 
+
+
+-	-	-	-	-	-	-	-	-	-	-	-
+
+
+☆ ajax 아이디 중복체크 하는법 ☆
+
+참고자료 : join.jsp   <script>부분  /  UserController.java  ajaxIdChk() 확인 
+상세내용은 주석처리해놨음
+
+
+-	-	-	-	-	-	-	-	-	-	-	-
+
+
+
+
+
+

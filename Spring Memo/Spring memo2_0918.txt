@@ -1,0 +1,45 @@
+09/18 MatZipSpring
+
+ㅡ	네이밍 규칙	ㅡ
+
+동사 앞, 명사 뒤 
+
+클래스명: 파스칼,메소드명, 변수명(DB관련x)
+ 카멜케이스 기법 (즉 _언더바 를 안붙인다)
+
+사용자 정의 메소드명 앞에는 _(언더바) 붙이기
+
+VO 변수명 단어 구분은 _(언더바) 사용
+
+MODEL
+DMI(Domain) - select 결과용
+UserPARAM - select parameter 용 (DAO까지 전달용)
+VO - insert, update, delete용
+
+CRUD
+(Java, DB)
+ins
+_Sel / sel_List
+upd
+del
+---------------
+
+오늘 건드린부분 
+servlet-context.xml
+UserController.java
+web.xml
+mybatis.alias.xml
+MatZipSpring/pom.xml
+
+
+
+
+
+
+
+
+
+
+
+
+

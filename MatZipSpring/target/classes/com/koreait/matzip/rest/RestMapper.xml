@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  mapper 하려면 DOCTYPE에 mapper 부분으로 입력해줘야됨 (마이바티스 xml이랑 비교해서 보기) -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Rest 관련 DAO -->
+<mapper namespace="com.koreait.matzip.rest.RestMapper">
+
+	<select id="selRestList" parameterType="RestPARAM" resultType="RestDMI">
+		SELECT i_rest, nm, lat, lng
+		FROM t_restaurant A
+		WHERE lat BETWEEN #{sw_lat} AND #{ne_lat}
+		AND lng BETWEEN #{sw_lng} AND #{ne_lng};
+	</select>
+	
+	
+	<insert id="insRestList" parameterType="RestVO">
+		INSERT INTO t_restaurant
+		(nm, addr, lat, lng, cd_category, i_user)
+		VALUES
+		(${nm}, ${addr}, ${lat}, ${lng}, ${cd_category}, ${i_user});
+	</insert>
+</mapper>

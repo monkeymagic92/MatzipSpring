@@ -1,0 +1,243 @@
+09/17  Spring 들어감
+
+유튜브 : 신의영역 종아리 알빼기 도전합니다
+
+이클립스 컴파일시 수정된소스 자동저장후 컴파일 하는 것
+window - Preferences - Launching - Save required dirty editors before launching - Always 체크
+
+프레임워크란 ?
+틀안에서 개발자간끼리 이렇게이렇게 규칙정해놓고 하자는 것
+
+하이버네이트 - 복잡한 구조의 프로그램 적합 (유지관리 좋음, 난이도가 높음) (Db계의 객체지향)
+
+마이바티스(우리가쓰는것)
+
+POJO(plain old java object) 사용 - 옛날 어려운 자바를 현대시대에 쉽게쉽게 사용하자라는 하나의 개발자운동 이라보면됨
+
+
+Bean등록 : 생성은 컨테이너(스프링) 이 직접 생성하고, 우리는 관여 X (즉, new 키워드는 vo할때빼곤 안씀)
+설정 안하면 싱글톤
+필요한 클래스(객체) 가 있으면 우리가 요청할때마다 스프링에서 하나씩 객체생성해서 줌 
+
+
+IoC (Inversion of Control) : 제어의 역행(콜백함수)
+(객체 생성을 컨테이너에게 맡긴다) 
+
+/
+
+DI(Dependency Insection) : 의존성 주입 
+
+
+
+
+
+AOP (Aspect Orented Programming) (관점지향) 우리가쓰는 JdbcTemplate 를 생각하면 됨 
+				바뀌는 내용만 만들어서 사용하는것을 AOP라고 생각하면 됨 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			-- Spring Add on <xml> 버전 다운 --    (boot 아님)
+
+
+1. 이클립스 - help - 마켓플레이스 - sts 검색
+
+2. Spring Tools 3 Add-On for spring Tools 4 3.9.14.RELEASE 버전 (boot아님) install(354k), 별표(244) 많이 있는거 다운
+
+3. 우측 하단에 installing software 로딩 다되면 이클립스 재시작 
+
+4. 잘 다운받았는지 확인할때 이클립스 상단 window - 제일하단(prepa..) - spring 검색했을시 spring 나오면 정상 
+
+
+
+			-  Spring 프로젝트 생성  -
+
+스프링 프로젝트 생성
+new - Spring Legacy project - Templates 에서 Spring MVE Project - 프로젝트이름 : BoardWeb - 
+패키지명 : com.springbook.biz
+( 위에 무슨 확인창 뜨면 긍정으로 확인 눌러주기 ) 
+만들면 이클립스 하단에 프로젝트 생성로딩바 흘러갈꺼임 (Maven 프로젝트 라이브러리 다운받기에 최초에는 로딩느림)
+					          ( 그이후로는 라이브러리를 참조하기에 프로젝트 빨리 만들어짐)
+
+
+
+			-  프로젝트 생성됬을시 해줘야할 행위 -
+
+우리가 사용하는 폴더
+src/main/java
+src/main/resources
+
+테스트 폴더 (
+src/test/java
+src/test/resources
+
+
+여태 jstl gson 이런 라이브러리들은 maven Dependencies 에 다 다운박혀있음
+라이브러리 저장장소 C:\Users\Administrator\.m2\repository
+
+
+JRE System Libray [JavaSe-1.6] 이것을 [JavaSE-1.8]로 바꾸는 방법
+프로젝트명 우클릭 -> Properties -> Project Facets -> Java 에서 1.8 누른후 우측 runtime 에서 아파치9.0 체크하고 apply
+
+
+
+
+- src -> webapp -> web.xml -> Source 누른후
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+
+</web-app>
+만 남겨두고 안에 내용은 다지우기 
+
+
+
+
+Mavn 라이브러리 사이트 https://mvnrepository.com/
+
+
+스프링 4. 대로 업데이트 하는방법 (pom.xml)
+BoardWeb 제일하단에 pom.xml  - source 에들어가서 (상단부분에)
+
+<properties> 
+	// 안에내용中
+</properties> 
+
+
+자바버전 1.8로 하기
+<java-version>1.8</java-version>
+
+
+spring버전 4.3.29로 하기 
+<org.springframework-version>4.3.29.RELEASE</org.springframework-version>
+
+
+
+위에 내용 다 적용했으면
+프로젝트 패키지부분 (Maven Dependencies) 에서 spring 어쩌고 라이브러리들이 4.3.29로 바꼇는지 확인
+
+
+
+
+학원(책)내용대로 테스트하는법
+
+1. src/main/java 에서 패키지생성 (polymorphism)
+2. 패키지안 SamsungTv 클래스 생성
+
+이하 src/main/java 부분보면서 알아서 객체지향 공부하기
+
+
+
+
+
+<이제 제대로시작하는부분 >
+com.springbook.biz 패키지에서
+Spring Bean Configuration File 생성
+
+src/main/resources 패키지 안에다가    (src/test/java , src/test/resources) 는 테스트용이니 건들지말기 !!!!!!!!!!!
+ApplicationContext.xml 파일 만들기   (Bean - 객체생성이라고 생각하면 됨 )
+
+xml 파일안에 <bean id="tv" class="polymorphism.SamsungTv"/>  추가
+
+
+
+
+
+@@@@@@@@@@@@@마이바티스 - spring 연결 라이브러리@@@@@@@@@@@@@@
+셋팅하는방법
+( 참고로 MatzipSpring pom.xml 들어가면 따로 개행 존나줘서 <!--Test--!> 이부분 보면 알거임 
+
+
+<!-- Exclude Commons Logging in favor of SLF4j -->
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				 </exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+
+상단 주석부분 지우고 이렇게 다시 복붙하기  <artifactId>spring-jdbc</artifactId> jdbc해야됨
+
+
+
+
+( pom.xml </dependencies> 끝나는지점 바로위에 <!-- Test --!> 보이는곳에 복붙 )
+(잘들어갔는지 확인하려면 maven depen... 에서 확인하면됨 )
+
+https://mvnrepository.com/artifact/org.mybatis/mybatis/3.5.5  		""
+https://mvnrepository.com/artifact/org.mybatis/mybatis-spring/2.0.5	""
+https://mvnrepository.com/artifact/com.zaxxer/HikariCP/3.4.5		""
+https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core/2.11.2	""
+https://mvnrepository.com/artifact/org.mindrot/jbcrypt/0.4	""
+https://mvnrepository.com/artifact/commons-io/commons-io/2.8.0		""
+https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload/1.4	""
+
+
+
+
+인코딩설정 ( 우리 jsp할때 xml 인코딩 잡아준거 )
+
+src - main - webapp - web-inf - web.xml 에서
+
+제일 하단 </web-app> 바로위에 우리 인코딩했던 xml fillter 어쩌고 그거 복붙해주기 
+
+
+
+여기까지 해줬으면
+우리 톰캣에서 실제로 서버 add on 우리프로젝트 올려주고
+http://localhost:8089/ 해줘서 hellowrold 뜨면 성공
+
+
+
+
+
+
+Servlet-context.xml 안에 주석 확인하기
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
