@@ -1,6 +1,6 @@
 package com.koreait.matzip.model;
 
-public class CodeDomain {
+public class CodeVO {
 	private int i_m;
 	private int cd;
 	private String val;
@@ -23,5 +23,4 @@ public class CodeDomain {
 	public void setVal(String val) {
 		this.val = val;
 	}
-	
 }

@@ -1,0 +1,52 @@
+09/22 
+러빈잇 여름코디
+
+-	-	-	-	-	-	-	-	-	-	-
+
+
+JSP파일에서 <form></form> 안에 내용을 submit으로 보내면
+컨트롤러 (서블릿) post로 날라올때
+
+jsp파일 name이름과 우리가 만든 VO객체의 이름 등이 맞으면
+자동으로 param.getNm() 뭐 이런식으로 쓸수있음
+
+참고자료 : RestController.java  insRestList() 메소드  /   restReg.jsp  
+
+
+-	-	-	-	-	-	-	-	-	-	-
+
+
+우리가 porm.xml 에서 Json 라이브러리를 <depensiy> 에 다운받았는데
+스프링에서 원래 기존에 다운받아있어서 굳이 <depensiy>로 라이브러리 받을 필요없음( 스프링에 내장되어있음 )
+
+
+-	-	-	-	-	-	-	-	-	-	-
+
+
+servlet-context에서 <interceptors/> 만들어줬음 참고하기
+
+참고자료 : LoginCheckInterceptor.java    ,  servlet-context.xml    ,    
+
+-	-	-	-	-	-	-	-	-	-	-
+
+
+★ 로그인 안되어있는(게스트) 경우라도 우리 첫화면 들어왔을때 바로 인덱스 페이지 
+즉, 지도화면띄우게끔 설정하는 것
+
+src - webapp - index.jsp  
+에서 <jsp:forward page="/rest/map"></jsp:forward>    
+걍 주석처리한거 봐라
+
+
+-	-	-	-	-	-	-	-	-	-	-
+
+VO 같은경우 데이터베이스와 1:1이기때문에 무조건 데이터베이스에 있는컬럼 다 있어야함
+
+-	-	-	-	-	-	-	-	-	-	-
+
+
+
+-	-	-	-	-	-	-	-	-	-	-
+
+
+

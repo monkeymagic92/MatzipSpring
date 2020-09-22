@@ -13,33 +13,35 @@
 	
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9996836ad8617fab6206b5bcc9625c1f"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-	<script>
-			
+	<script>			
+		var markerList = [] // 마커 리스트
+	
 		const options = { //지도를 생성할 때 필요한 기본 옵션
 			center: new kakao.maps.LatLng(35.958437, 128.486084), //지도의 중심좌표.
 			level: 5 //지도의 레벨(확대, 축소 정도)
-		};
+		}
 	
 		const map = new kakao.maps.Map(mapContainer, options);
 		
-		
 		function getRestaurantList() {
+			// 마커 모두 지우기
+			markerList.forEach(function(marker) {
+				marker.setMap(null)
+			})
+			
 			const bounds = map.getBounds()
 			const southWest = bounds.getSouthWest()
 			const northEast = bounds.getNorthEast()
 			
-			// 콘솔값 잘못 찍혀도 실행안됨(console.log 영향큼 (오타안나게 조심하자))
-			console.log('southWest : ' + southWest)
-			console.log('northEast : ' + northEast)
+			console.log('southWest:' + southWest)
+			console.log('northEast:' + northEast)
 			
 			const sw_lat = southWest.getLat()
 			const sw_lng = southWest.getLng()
 			const ne_lat = northEast.getLat()
-			const ne_lng = northEast.getLng()
+			const ne_lng = northEast.getLng()			
 			
-			// RestController.java / ajaxGetList() 메소드로 값 날림  (get방식이니 params: {} 로보냄)
-			// 즉 params 에 있는값이 자바 ajaxGetList() 메소드로 날라가는거임 
-			axios.get('/rest/ajaxGetList', {	// rest/ajaxGetList 맵핑주소가 잡힌곳으로 값을 날리겠다  
+			axios.get('/rest/ajaxGetList', {
 				params: {
 					sw_lat, sw_lng, ne_lat, ne_lng
 				}
@@ -51,8 +53,9 @@
 				})
 			})		
 		}
-	
-		kakao.maps.event.addListener(map, 'dragend', getRestaurantList)
+		
+		// tilesloaded 하면 화면 움직이고 딱 멈췄을때 그때 서버에서 값을 가져옴
+		kakao.maps.event.addListener(map, 'tilesloaded', getRestaurantList)   
 		
 		//마커생성
 		function createMarker(item) {			
@@ -84,10 +87,13 @@
 			})
 			
 			marker.setMap(map)
+			
+			markerList.push(marker)
 		}
 		
+		// 지도에 가게누르면 rest/detail.jsp 로 가게끔 해놨음
 		function moveToDetail(i_rest) {
-			location.href="/restaurant/restDetail?i_rest=" + i_rest
+			location.href = '/rest/detail?i_rest=' + i_rest
 		}
 		
 		
@@ -119,5 +125,6 @@
 		} else {
 		  console.log('Geolocation is not supported for this Browser/OS.');
 		}
+	
 	</script>
 </div>

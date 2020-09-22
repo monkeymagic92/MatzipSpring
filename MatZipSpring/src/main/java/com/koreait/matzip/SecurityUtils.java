@@ -14,6 +14,11 @@ public class SecurityUtils {
 		return getLoginUser(request).getI_user();
 	}
 	
+	// 세션이 박힌 로그인유저 pk값 반환 
+	public static int getLoginUserPk(HttpSession hs) {
+		return ((UserVO)hs.getAttribute(Const.LOGIN_USER)).getI_user();
+	}
+	
 	// 세션키값 : loginUser 에 담긴 값을 반환하는 메소드
 	public static UserVO getLoginUser(HttpServletRequest request) {
 		HttpSession hs = request.getSession();

@@ -31,6 +31,16 @@ public class UserController {
 	@Autowired  
 	private UserService service;
 	
+	// 로그아웃
+	@RequestMapping(value="/logout", method = RequestMethod.GET)
+	public String logout(HttpSession hs) {
+		hs.invalidate();
+		return "redirect:/"; // 우리는 로그인안해도 되는 서비스이니까 
+							// 로그아웃했을시에는 그냥 지도화면 띄우게끔
+							// 왜냐 ? 지도화면이 src-resource-index.jsp 보면 됨 (여기가 메인페이지니까)
+	}
+	
+	
 	@RequestMapping(value="/login", method = RequestMethod.GET)
 	public String login(Model model) {
 		model.addAttribute(Const.TITLE,"로그인");
@@ -63,7 +73,6 @@ public class UserController {
 												// 지금 addFlash.. 는 session처럼 값이 박히고 다쓰고나면 죽음 ( 우리가알던 세션의 구버전느낌? 짝퉁세션느낌이라 보면됨 )
 		return "redirect:/user/login";	// login doGet메소드로 보내는 것
 	}
-	
 	
 	
 	@RequestMapping(value="/join", method = RequestMethod.GET)

@@ -11,5 +11,7 @@
 	<div id="container">
 		<jsp:include page="/WEB-INF/views/${view}.jsp"></jsp:include>
 	</div>
+	
 </body>
+
 </html>

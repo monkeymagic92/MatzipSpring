@@ -4,24 +4,24 @@
   
 <div id="sectionContainerCenter">
 	<div>
-		<form id="frm" action="/rest/Reg" method="post" onsubmit="return chkFrm()">
+					<!-- action="rest/restReg" 부분은  RestController 부분의 action경로대로 post메소드에 값을 넘김  -->					 
+		<form id="frm" action="/rest/reg" method="post" onsubmit="return chkFrm()">
 			<div><input type="text" name="nm" placeholder="가게명"></div>
 			<div>
 				<input type="text" name="addr" placeholder="주소" onkeyup="changeAddr()" style="width: 200px;">
 				<button type="button" onclick="getLatLng()">좌표가져오기</button><span id="resultGetLatLng"></span>
 			</div>
 			<input type="hidden" name="lat" value="0">
-			<input type="hidden" name="lag" value="0">
+			<input type="hidden" name="lng" value="0">
 			<div>
-				카테고리 :
-				 	<input type="text" name="cd_category" value="1">
-<%--				<select name="cd_category">
+				카테고리 :				 	
+				<select name="cd_category">
 					<option value="0">--선택--</option>
 					<c:forEach items="${categoryList}" var="item">
 						<option value="${item.cd}">${item.val}</option>
 					</c:forEach>
 				</select>
- --%>
+
 			</div>
 			<div><input type="submit" value="등록"></div>
 		</form>
@@ -43,7 +43,7 @@
 				frm.addr.focus();
 				return false;
 				
-			} else if(frm.lat.value == '0' || frm.lag.value == '0') {
+			} else if(frm.lat.value == '0' || frm.lng.value == '0') {
 				alert('좌표값을 가져와 주세요');
 				return false;
 			} else if(frm.cd_category.value == '0') {
@@ -56,7 +56,7 @@
 		function changeAddr() {
 			resultGetLatLng.innerText = ''; // 옆에 주소값 등록안되어있으면 빈값 
 			frm.lat.value = '0'
-			frm.lag.value = '0'
+			frm.lng.value = '0'
 		}
 	
 		const geocoder = new kakao.maps.services.Geocoder();
@@ -77,7 +77,7 @@
 			        if(result.length > 0) {
 			        	resultGetLatLng.innerText = 'V'	// 옆에 주소값 추가되면 v 나타내기
 			        	frm.lat.value = result[0].y
-			        	frm.lag.value = result[0].x
+			        	frm.lng.value = result[0].x
 			        }
 			    }	
 			});			

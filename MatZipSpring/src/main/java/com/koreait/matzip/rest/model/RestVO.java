@@ -1,5 +1,7 @@
 package com.koreait.matzip.rest.model;
 
+
+// VO 같은경우 데이터베이스와 1:1이기때문에 무조건 데이터베이스에 있는컬럼 다 있어야함
 public class RestVO {
 	private int i_rest;
 	private String nm;
@@ -10,8 +12,15 @@ public class RestVO {
 	private int i_user;
 	private String r_dt;
 	private String m_dt;
+	private int hits;
 	
 	
+	public int getHits() {
+		return hits;
+	}
+	public void setHits(int hits) {
+		this.hits = hits;
+	}
 	public int getI_rest() {
 		return i_rest;
 	}

@@ -58,8 +58,8 @@
 						</span>
 					</div>
 					<div class="status branch_none">
-						<span class="cnt hit">${data.cntHits}</span>					
-						<span class="cnt favorite">${data.cntFavorite}</span>
+						<span class="cnt hit">${data.hits}</span>					
+						<span class="cnt favorite">${data.cd_category_nm}</span>
 					</div>
 				</div>
 				<div>

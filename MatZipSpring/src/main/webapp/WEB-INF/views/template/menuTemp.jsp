@@ -18,22 +18,37 @@
 	<div id="container">
 		<header>
 			<div id="headerLeft">
-				<div class="containerPImg">
-					<c:choose>
-						<c:when test="${loginUser.profile_img != null}">
-							<img class="pImg" src="/res/img/user/${loginUser.i_user}/${loginUser.profile_img}">
-						</c:when>
-						<c:otherwise>
-							<img class="pImg" src="/res/img/default_profile.jpg">
-						</c:otherwise>
-					</c:choose>
-				</div>
-				<div class="ml5">${loginUser.nm }님 환영합니다.<br></div>
-				<div class="ml10"><a href="/user/logout">로그아웃</a></div>				
+			
+				<!-- if문 잘보기 로그인됬을땐 로그인 창이뜨고   로그아웃일시 로그아웃에 관련된 창,  2개중 한개 띄우기 -->
+				<c:if test="${loginUser != null }">
+					<div class="containerPImg">
+						<c:choose>
+							<c:when test="${loginUser.profile_img != null}">
+								<img class="pImg" src="/res/img/user/${loginUser.i_user}/${loginUser.profile_img}">
+							</c:when>
+							<c:otherwise>
+								<img class="pImg" src="/res/img/default_profile.jpg">
+							</c:otherwise>
+						</c:choose>
+					</div>
+					<div class="ml5">${loginUser.nm }님 환영합니다.<br></div>
+					<div class="ml10"><a href="/user/logout">로그아웃</a></div>
+				</c:if>
+				<c:if test="${loginUser == null }">
+					<div class="ml10"><a href="/user/login">로그인</a></div>
+				</c:if>
+								
 			</div>
 			<div id="headerRight">
-				<a href="/restaurant/restMap">지도</a>
-				<a class="ml15" href="/restaurant/restReg">등록</a>
+				<a href="/rest/map">지도</a>
+				
+				<c:if test="${loginUser != null }">
+					<a class="ml15" href="/rest/reg">등록</a>
+				</c:if>
+				<c:if test="${loginUser == null }">
+					<a class="ml15" href="#" onclick="alert('로그인이필요합니다')">등록</a>
+				</c:if>
+				
 				<a class="ml15" href="/user/restFavorite">찜</a>
 	     	</div>			
 		</header>

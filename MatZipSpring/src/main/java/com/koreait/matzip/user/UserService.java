@@ -36,6 +36,7 @@ public class UserService {
 		
 		param.setUser_pw(null); // 굳이 비번은 알필요없으니 확인만 한후 다시 null값 줌
 		param.setNm(dbUser.getNm());
+		param.setI_user(dbUser.getI_user());
 		param.setProfile_img(dbUser.getProfile_img());
 		return Const.SUCCESS;
 		
