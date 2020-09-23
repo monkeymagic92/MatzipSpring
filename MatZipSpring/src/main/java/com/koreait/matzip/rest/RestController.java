@@ -96,14 +96,13 @@ public class RestController {
 		
 		RestDMI data = service.selRest(param);
 		
-		model.addAttribute(Const.TITLE,data.getNm()); // service에서 넘어온 가게명 값을 타이틀로 박겠다 
-		model.addAttribute(Const.VIEW,"rest/restDetail");
-		model.addAttribute("data",data);
+		model.addAttribute("recMenuList", service.selRestRecMenu(param));
 		
-		model.addAttribute("css", new String[] {"restaurant"});
-		model.addAttribute("recMenuList", service.selRestRecMenus(vo));
-		
-		return ViewRef.TEMP_MENU_TEMP;		
+		model.addAttribute("css", new String[]{"restDetail"});
+		model.addAttribute("data", data);
+		model.addAttribute(Const.TITLE, data.getNm()); //가게명
+		model.addAttribute(Const.VIEW, "rest/restDetail");
+		return ViewRef.TEMP_MENU_TEMP;
 	}
 	
 	
@@ -146,17 +145,15 @@ public class RestController {
 	
 	
 	
-	
 	// detail.jsp 에서 메뉴 x버튼 누르면 삭제하는 메소드
 	@RequestMapping("/ajaxDelRecMenu")
-	@ResponseBody
-	public int ajaxDelRecMenu(RestRecMenuVO param, HttpSession hs) {
-		
-		String path = "/resources/img/rest/" + param.getI_rest() + "/rec_menu"; 
+	@ResponseBody 
+	public int ajaxDelRecMenu(RestPARAM param, HttpSession hs) {		
+		String path = "/resources/img/rest/" + param.getI_rest() + "/rec_menu/";
 		String realPath = hs.getServletContext().getRealPath(path);
-		param.setI_user(SecurityUtils.getLoginUserPk(hs)); // 로그인 유저 pk값 담기
-		return service.delRestMenu(param, realPath);
-	}
-	
+		param.setI_user(SecurityUtils.getLoginUserPk(hs)); //로긴 유저pk담기
+		return service.delRecMenu(param, realPath);
+	}	
+		
 		
 }

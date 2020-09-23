@@ -13,21 +13,13 @@ import com.koreait.matzip.rest.model.RestRecMenuVO;
 @Mapper
 public interface RestMapper {
 	// 레스토랑 전체 띄우기(아작스)
-	public List<RestDMI> selRestList(RestPARAM param);
-	
-	// n번 레스토랑 메뉴리스트 띄우기
-	public List<RestRecMenuVO> selRestRecMenus(RestRecMenuVO param);
-	
-	public int insRest(RestPARAM param);
-	
-	public RestDMI selRest(RestPARAM param);
-	
-	// 삭제 부분
-	public int delRestRecMenu(RestPARAM param);
-	public int delRestMenu(RestPARAM param);
-	public int delRest(RestPARAM param);
-	
-	// 메뉴이름,가격,사진 등록
-	public int insRestRecMenu(RestRecMenuVO param);
+	int insRest(RestPARAM param);
+	int insRestRecMenu(RestRecMenuVO param);
+	List<RestDMI> selRestList(RestPARAM param);
+	RestDMI selRest(RestPARAM param);
+	List<RestRecMenuVO> selRestRecMenus(RestPARAM param);
+	int delRestRecMenu(RestPARAM param);
+	int delRestMenu(RestPARAM param);
+	int delRest(RestPARAM param);
 	
 }

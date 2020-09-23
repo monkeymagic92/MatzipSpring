@@ -125,34 +125,31 @@ public class RestService {
 	
 	//selRestRecMenu
 	// n번 레스토랑 메뉴 띄우기 
-	public List<RestRecMenuVO> selRestRecMenus(RestRecMenuVO vo) {
-		//List<RestRecMenuVO> list = new ArrayList();
-		
-		return mapper.selRestRecMenus(vo); 
+	public List<RestRecMenuVO> selRestRecMenu(RestPARAM param) {		
+		return mapper.selRestRecMenus(param);
 	}
 	
 	
 	
 	// detail.jsp 에서 ajax로 값 삭제하는 메소드
 	// RestController.java 의 ajaxDelRecMenu() 메소드 와 연동
-	public int delRestMenu(RestRecMenuVO param, String realPath) {		
-		// 파일삭제 
+	public int delRecMenu(RestPARAM param, String realPath) {
+		//파일 삭제
 		List<RestRecMenuVO> list = mapper.selRestRecMenus(param);
 		if(list.size() == 1) {
 			RestRecMenuVO item = list.get(0);
 			
-			if(item.getMenu_pic() != null && !item.getMenu_pic().equals("")) { // 이미지 있음(! 확인하기)  뜻 : 빈칸이 아니라면
+			if(item.getMenu_pic() != null && !item.getMenu_pic().equals("")) { //이미지 있음 > 삭제!!
 				File file = new File(realPath + item.getMenu_pic());
-				if(file.exists()) { // file.exists()  :  그파일이 실제로 존재하는지 여부파악 반환 : boolean					
-					if(file.delete()) { // delete() 메소드는 리턴이 boolean 타입이다
-						return mapper.delRecMenu(param);
-						
+				if(file.exists()) {
+					if(file.delete()) {
+						return mapper.delRestRecMenu(param);
 					} else {
 						return 0;
 					}
 				}
 			}
-		}
+		}		
 		
 		return mapper.delRestRecMenu(param);
 	}

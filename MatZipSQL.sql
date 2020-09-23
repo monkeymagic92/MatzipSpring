@@ -1,12 +1,10 @@
-﻿CREATE TABLE t_restaurant_menu(
+CREATE TABLE t_restaurant_menu(
 	i_rest INT UNSIGNED,
 	seq INT UNSIGNED,
 	menu_pic VARCHAR(50),
 	PRIMARY KEY(i_rest, seq),
 	FOREIGN KEY(i_rest) REFERENCES t_restaurant(i_rest)
 );
-
-
 
 -- 추천메뉴 테이블 / 음식메뉴, 가격, 사진담당
 CREATE TABLE t_restaurant_recommend_menu(
@@ -45,7 +43,7 @@ CREATE TABLE t_restaurant(
 	FOREIGN KEY (i_user) REFERENCES t_user(i_user)
 );
 
-
+SELECT * FROM t_user;
 
 
 CREATE TABLE c_code_m(
@@ -54,6 +52,7 @@ CREATE TABLE c_code_m(
 	cd_nm VARCHAR(20) DEFAULT ''
 );
 
+INSERT INTO c_code_m (i_m, `desc`, cd_nm) VALUES (1,'음식점 카테고리','cd_category');
 
 
 CREATE TABLE c_code_d(
@@ -63,6 +62,13 @@ CREATE TABLE c_code_d(
 	PRIMARY KEY(i_m, cd),
 	FOREIGN KEY(i_m) REFERENCES c_code_m(i_m)
 );
+
+INSERT INTO c_code_d (i_m, cd, val) VALUES (1,1,'한식');
+INSERT INTO c_code_d (i_m, cd, val) VALUES (1,2,'분식');
+INSERT INTO c_code_d (i_m, cd, val) VALUES (1,3,'양식');
+INSERT INTO c_code_d (i_m, cd, val) VALUES (1,4,'일식');
+INSERT INTO c_code_d (i_m, cd, val) VALUES (1,5,'중식');
+
 
 -- 회원 관심사 테이블
 CREATE TABLE t_user_favorite(

@@ -58,7 +58,7 @@
 	<!-- if문은 i_user > 0 이고  seq > 0 일때 if문이 실행되고 
 		그게아니면 if문 쿼리문은 사용안되고 오리지널 쿼리문만 사용됨
 	 -->
-	<select id="selRestRecMenus" parameterType="RestRecMenuVO" resultType="RestRecMenuVO">
+	<select id="selRestRecMenus" parameterType="RestPARAM" resultType="RestRecMenuVO">
 		SELECT A.seq, A.menu_nm, A.menu_price, A.menu_pic
 		FROM t_restaurant_recommend_menu A
 		<if test="i_user > 0">
@@ -66,7 +66,7 @@
 			ON A.i_rest = B.i_rest
 			AND B.i_user = #{i_user}
 		</if>
-		WHERE i_rest = #{i_rest}
+		WHERE A.i_rest = #{i_rest}
 		<if test="seq > 0">
 			AND A.seq = #{seq}
 		</if>
