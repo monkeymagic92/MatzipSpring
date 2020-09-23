@@ -9,16 +9,16 @@
 <meta charset="UTF-8">
 <title>${title}</title>
 <link rel="stylesheet" type="text/css" href="/res/css/common.css">
+<link rel="styleshhet" type="text/css" href="res/css/restaurant.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <c:forEach items="${css}" var="item">
-	<link rel="stylesheet" type="text/css" href="/res/css/${item}.css">
+<link rel="stylesheet" type="text/css" href="/res/css/${item}.css">
 </c:forEach>
 </head>
 <body>
 	<div id="container">
 		<header>
 			<div id="headerLeft">
-			
 				<!-- if문 잘보기 로그인됬을땐 로그인 창이뜨고   로그아웃일시 로그아웃에 관련된 창,  2개중 한개 띄우기 -->
 				<c:if test="${loginUser != null }">
 					<div class="containerPImg">

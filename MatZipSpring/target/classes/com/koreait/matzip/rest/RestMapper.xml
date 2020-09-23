@@ -51,4 +51,73 @@
 	</select>
 	
 	
+	
+	
+	<!-- n번 레스토랑 등록한 메뉴 띠우기 -->
+	<!-- and 메뉴(사진) 삭제하기 -->
+	<!-- if문은 i_user > 0 이고  seq > 0 일때 if문이 실행되고 
+		그게아니면 if문 쿼리문은 사용안되고 오리지널 쿼리문만 사용됨
+	 -->
+	<select id="selRestRecMenus" parameterType="RestRecMenuVO" resultType="RestRecMenuVO">
+		SELECT A.seq, A.menu_nm, A.menu_price, A.menu_pic
+		FROM t_restaurant_recommend_menu A
+		<if test="i_user > 0">
+			INNER JOIN t_restaurant B
+			ON A.i_rest = B.i_rest
+			AND B.i_user = #{i_user}
+		</if>
+		WHERE i_rest = #{i_rest}
+		<if test="seq > 0">
+			AND A.seq = #{seq}
+		</if>
+	</select>
+	
+		 
+		
+		 
+	<!-- 삭제할때 레스토랑메뉴, 레스토랑 등 테이블 3개 동시에 날리기 위해  
+		트랜지션 사용
+		참고 : servlet-context 에서 <tx>태그 사용한곳 보기
+	-->
+	<delete id="delRestRecMenu" parameterType="RestPARAM">
+		DELETE A FROM t_restaurant_recommend_menu A
+		INNER JOIN t_restaurant B
+		ON A.i_rest = B.i_rest
+		WHERE B.i_rest = #{i_rest}
+		AND B.i_user = #{i_user}	
+		<if test="seq > 0">
+			AND A.seq = #{seq}
+		</if>
+	</delete>	
+	
+	<delete id="delRestMenu" parameterType="RestPARAM">
+		DELETE A FROM t_restaurant_menu A
+		INNER JOIN t_restaurant B
+		ON A.i_rest = B.i_rest
+		WHERE B.i_rest = #{i_rest}
+		AND B.i_user = #{i_user}		
+		<if test="seq > 0">
+			AND A.seq = #{seq}
+		</if>
+	</delete>	
+	
+	<delete id="delRest" parameterType="RestPARAM">
+		DELETE FROM t_restaurant
+		WHERE i_rest = #{i_rest}
+		AND i_user = #{i_user}
+	</delete>
+	<!-- -	-	-	-	-	-	-	-	-	-	-	- -->
+	
+	
+	<insert id="insRestRecMenu" parameterType="RestRecMenuVO">
+		INSERT INTO t_restaurant_recommend_menu
+		(i_rest, seq, menu_nm, menu_price, menu_pic)
+		SELECT #{i_rest}, ifnull(max(seq), 0) + 1, #{menu_nm}, #{menu_price}, #{menu_pic}
+		FROM t_restaurant_recommend_menu
+		WHERE i_rest = #{i_rest}
+	</insert>
+	
+	
+	
+	
 </mapper>

@@ -4,10 +4,12 @@
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
@@ -56,10 +58,16 @@
 	</beans:bean>
 	
 	
+	
+	
+	
 	<!-- BoardWeb4에서 close() 각 DB연결한 Connection, PreparedStatement, ResultSet close() 해주는 것 -->
 	<beans:bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
 		<beans:constructor-arg ref="hikariConfig" /> <!-- constructor-arg ref="" 생성자에 값 넣는 것 -->
 	</beans:bean>
+	
+	
+	
 	
 	
 	<!-- mybatis 랑 spring 연동 모듈 -->
@@ -69,8 +77,25 @@
 	</beans:bean>
 	
 	
+	
+	
+	
 	<!-- 얘는 인터페이스의 @Mapper를 찾는 애 -->
 	<mybatis-spring:scan base-package="com.koreait.matzip"/> <!--  하단 탭에Namespace import 안해서 빨간줄 뜨는것  -->
+	
+		
+	
+	
+	
+	<!-- 트랜지션 사용하기위해 등록하는 것 -->
+	<beans:bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<beans:property name="dataSource" ref="dataSource" />
+	</beans:bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!-- -	-	-	-	-	-	-	-	-	-	-	-	-	-	- -->
+	
+	
 	
 	
 	
@@ -84,4 +109,22 @@
 			<beans:bean class="com.koreait.matzip.LoginCheckInterceptor" />
 		</interceptor>
 	</interceptors>
+	<!-- -	-	-	-	-	-	-	-		-	-	-	-	-	-	-	 -->
+	
+	
+	
+
+	
+	<!-- file Upload 하는 Beans (참고자료 : 디테일 사진 추가할때)
+		빨리치기위해 class="Commons" ctrl+spacebar 하면 자동으로 링크목록나옴
+	-->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="52428800" /> <!-- 5MB -->
+		<beans:property name="defaultEncoding" value="utf-8" />			
+	</beans:bean>
+	<!-- -	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	- -->
+	
+	
+	
+	
 </beans:beans>

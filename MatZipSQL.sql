@@ -36,8 +36,9 @@ CREATE TABLE t_restaurant(
 	nm VARCHAR(20) NOT null,
 	addr VARCHAR(100) NOT NULL,
 	lat DOUBLE UNSIGNED NOT NULL, -- 좌표 값
-	lag DOUBLE UNSIGNED NOT NULL, -- 좌표 값 
+	lng DOUBLE UNSIGNED NOT NULL, -- 좌표 값 
 	cd_category INT unsigned NOT NULL,
+	hits int,
 	i_user INT UNSIGNED NOT NULL COMMENT '등록자',
 	r_dt DATETIME DEFAULT NOW(),
 	m_dt DATETIME DEFAULT NOW(),
@@ -50,8 +51,10 @@ CREATE TABLE t_restaurant(
 CREATE TABLE c_code_m(
 	i_m INT UNSIGNED PRIMARY KEY,
 	`desc` VARCHAR(30) DEFAULT '',
-	cd_nm VARCHAR(10) DEFAULT ''
+	cd_nm VARCHAR(20) DEFAULT ''
 );
+
+
 
 CREATE TABLE c_code_d(
 	i_m INT UNSIGNED,
@@ -70,16 +73,6 @@ CREATE TABLE t_user_favorite(
 	FOREIGN KEY(i_rest) REFERENCES t_restaurant(i_rest),
 	FOREIGN KEY(i_user) REFERENCES t_user(i_user)
 );
-
-
-
-SELECT A.val FROM c_code_d A
-INNER JOIN c_code_m B
-ON A.i_m = B.i_m;
-
-
-SELECT * FROM t_restaurant;
-
 
 -- c_code_m 에다가 컬럼값 다 넣기 
 

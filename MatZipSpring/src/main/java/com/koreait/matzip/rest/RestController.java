@@ -1,5 +1,6 @@
 package com.koreait.matzip.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -7,17 +8,18 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.koreait.matzip.Const;
 import com.koreait.matzip.SecurityUtils;
 import com.koreait.matzip.ViewRef;
 import com.koreait.matzip.rest.model.RestDMI;
 import com.koreait.matzip.rest.model.RestPARAM;
+import com.koreait.matzip.rest.model.RestRecMenuVO;
 
 @Controller
 @RequestMapping("/rest") // 쉽게생각해서 예전에 matzip 버전할때 맵퍼 swich문 1차로 rest를 하겠다란 뜻
@@ -65,6 +67,8 @@ public class RestController {
 		return ViewRef.TEMP_MENU_TEMP;
 	}
 	
+	
+	
 	// jsp에서 입력받은 값을 실제 등록시키는 메소드 (post)
 	// jsp에서 값이 넘어올때 param = jsp(name)값을 자동으로 긁어옴 
 	@RequestMapping(value="/reg", method = RequestMethod.POST)
@@ -85,17 +89,74 @@ public class RestController {
 	}
 	
 	
+	
 	// 디테일 화면 띄우는 메소드
 	@RequestMapping("/detail")
-	public String detail(Model model, RestPARAM param) {
+	public String detail(Model model, RestPARAM param, RestRecMenuVO vo) {
 		
 		RestDMI data = service.selRest(param);
+		
 		model.addAttribute(Const.TITLE,data.getNm()); // service에서 넘어온 가게명 값을 타이틀로 박겠다 
 		model.addAttribute(Const.VIEW,"rest/restDetail");
 		model.addAttribute("data",data);
 		
+		model.addAttribute("css", new String[] {"restaurant"});
+		model.addAttribute("recMenuList", service.selRestRecMenus(vo));
+		
 		return ViewRef.TEMP_MENU_TEMP;		
 	}
+	
+	
+	
+	// 가게삭제
+	@RequestMapping("/del")
+	public String del(RestPARAM param, HttpSession hs) { // restDetail.jsp 에서 isDel() 메소드 작동하여 i_rest 값이 param에 담겨있음
+		// 장난질 못하게 게시글 작성한 사람과 로그인한 사람이 같다면 삭제가능하게끔
+		// 일단 로그인한 사람의 pk값을 받아왔음
+		int loginI_user = SecurityUtils.getLoginUserPk(hs);
+		param.setI_user(loginI_user);
+		int result = 1;
+		try {	// 만약 트랜잭션 썻을때 try문 안썻을땐 쿼리문이 에러창에 뜸 (보안상 불리)
+			service.delRestTran(param);
+		} catch(Exception e) {
+			result = 0;
+		}
+		System.out.println("-- 컨트롤러 --");
+		System.out.println(param.getI_user());
+		System.out.println("-	-	-");
 		
+		System.out.println("restul : " + result);
+		return "redirect:/";
+	}	
+	
+	
+	// restDetail.jsp에서 사진 등록하기 
+	// MultipartHttpSErvletRequest = 다중 파일업로드 하기위해 필요한 것
+	// 경로로 사진이 저장됨
+	// E:\SpringBackClass\JyFiles\eclipse-workspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\MatZipSpring\resources\img	
+	@RequestMapping(value="/recMenus", method=RequestMethod.POST)
+	public String recMenus(MultipartHttpServletRequest mReq
+			, RedirectAttributes ra) {
+		
+		int i_rest = service.insRecMenus(mReq);
+		ra.addAttribute("i_rest", i_rest);
+		
+		return "redirect:/rest/detail";
+	}
+	
+	
+	
+	
+	// detail.jsp 에서 메뉴 x버튼 누르면 삭제하는 메소드
+	@RequestMapping("/ajaxDelRecMenu")
+	@ResponseBody
+	public int ajaxDelRecMenu(RestRecMenuVO param, HttpSession hs) {
+		
+		String path = "/resources/img/rest/" + param.getI_rest() + "/rec_menu"; 
+		String realPath = hs.getServletContext().getRealPath(path);
+		param.setI_user(SecurityUtils.getLoginUserPk(hs)); // 로그인 유저 pk값 담기
+		return service.delRestMenu(param, realPath);
+	}
+	
 		
 }

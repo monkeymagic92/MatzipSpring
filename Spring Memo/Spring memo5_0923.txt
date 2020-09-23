@@ -1,0 +1,52 @@
+09/23
+★ 오늘 porm.xml <!-- Servlet --> 부분 버전 변경 해줬음 
+
+
+JSP에서 값을 보내면 param에 자동으로 getParameter 안해도 담기는 이해를 하였음
+가게 삭제누르면 가게등록한유저 pk값 , 레스토랑pk값이 찍힘
+집에가서 내가 파일 만들어서 테스트해보기
+참고 : RestController.java  ,  RestService.java   ,  servlet-context.xml (<tx태그>)
+
+위에서 servlet-context.xml 에서 tx (트랜잭션) 코드 참고하기 
+
+-	-	-	-	-	-	-	-	-	-
+
+
+스프링할땐 쿼리문에서 WHERE i_user = ?   X!!
+		    WHERE i_user = #{i_user} 
+이렇게 직접적으로 param에 담긴값을 그대로 직접적으로 때려박음 
+
+
+-	-	-	-	-	-	-	-	-	-	
+
+
+트랜잭션이란 ?
+2개이상의 쿼리문을 전체 다 실행시켜서
+한개라도 문제가생기면 롤백
+문제없을때 오토커밋으로 자동실행 하는것
+
+
+-	-	-	-	-	-	-	-	-	-	
+
+
+Mapper.xml 쿼리문에서 id, parameterType , ResultType 에 대해서 공부하기
+
+
+-	-	-	-	-	-	-	-	-	-	
+
+
+파일 업로드 등록하는 법
+참고 : RestController.java  ,  RestService.java  ,  servlet-context.xml  ,  RestMapper.xml  ,  mybatis.xml (경로추가)
+
+
+
+-	-	-	-	-	-	-	-	-	-	
+
+
+★★★ 집가서 꼭 하기
+쌤 깃허브 들어가서
+
+RestService.java   제일밑에 메소드 delRestMenu 메소드 수정
+RestMapper.xml 쿼리문 확인하기
+RestController.java 제일밑에 ajax메소드 확인하기 
+
