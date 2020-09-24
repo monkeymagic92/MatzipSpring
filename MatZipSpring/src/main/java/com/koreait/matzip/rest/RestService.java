@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,12 +14,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.koreait.matzip.CommonUtils;
+import com.koreait.matzip.Const;
 import com.koreait.matzip.FileUtils;
+import com.koreait.matzip.SecurityUtils;
 import com.koreait.matzip.model.CodeVO;
 import com.koreait.matzip.model.CommonMapper;
 import com.koreait.matzip.rest.model.RestDMI;
+import com.koreait.matzip.rest.model.RestFile;
 import com.koreait.matzip.rest.model.RestPARAM;
 import com.koreait.matzip.rest.model.RestRecMenuVO;
+
+
 
 
 @Service
@@ -55,7 +62,7 @@ public class RestService {
 	
 	
 	@Transactional // 트랜잭션 사용하기위한 어노테이션
-				// 하나하나 실행해서 에러가 터지면 rollback 잘되면 commit 하겠다
+				   // 하나하나 실행해서 에러가 터지면 rollback 잘되면 commit 하겠다
 	public void delRestTran(RestPARAM param) {
 		System.out.println("-- 서비스 --");
 		System.out.println(param.getI_rest());
@@ -75,15 +82,21 @@ public class RestService {
 	}
 	//-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
 	
-	
+	// 파일 추가하기
 	public int insRecMenus(MultipartHttpServletRequest mReq) {
-				
+		
+		int i_user = SecurityUtils.getLoginUserPk(mReq.getSession());		
 		int i_rest = Integer.parseInt(mReq.getParameter("i_rest"));
+		if(_authFail(i_rest, i_user)) {
+			return Const.FAIL;
+		}
+		
 		List<MultipartFile> fileList = mReq.getFiles("menu_pic");
 		String[] menuNmArr = mReq.getParameterValues("menu_nm");
 		String[] menuPriceArr = mReq.getParameterValues("menu_price");
 		 
-		String path = mReq.getServletContext().getRealPath("/resources/img/rest/" + i_rest + "/rec_menu/");
+		// Const.realPath = Const.java  ,  IndexController.java 참고 (기본패키지)
+		String path = Const.realPath + "/resources/img/rest/" + i_rest + "/rec_menu/";
 		
 		List<RestRecMenuVO> list = new ArrayList();
 		
@@ -121,8 +134,41 @@ public class RestService {
 		return i_rest;
 	}
 	
+
+	// 저장위치 : menu   (기존에는 rec_menu 였음 (추천메뉴))
+	// db테이블명 : restaurant_menu	
+	public int insRestMenu(RestFile param, int i_user) {		
+		if(_authFail(param.getI_rest(), i_user)) {
+			return Const.FAIL;
+		}
+		
+		String path = Const.realPath + "/resources/img/rest/" + param.getI_rest() + "/menu/";
+		System.out.println("2 path : " + path);
+		
+		List<RestRecMenuVO> list = new ArrayList();
+		
+		for(MultipartFile mf : param.getMenu_pic()) {
+			RestRecMenuVO vo = new RestRecMenuVO();
+			list.add(vo);			
+			
+			String saveFileNm = FileUtils.saveFile(path, mf);
+			vo.setMenu_pic(saveFileNm);
+			vo.setI_rest(param.getI_rest());
+		}
+		
+		for(RestRecMenuVO vo : list) {
+			mapper.insRestMenu(vo);
+			System.out.println("3 rest : " + vo.getI_rest());
+			System.out.println("4 i_user : " + vo.getMenu_pic());
+		}
+		
+		return Const.SUCCESS;
+	}
+	
+
 	
 	
+	// 파일 다중 등록하는 메소드 
 	//selRestRecMenu
 	// n번 레스토랑 메뉴 띄우기 
 	public List<RestRecMenuVO> selRestRecMenu(RestPARAM param) {		
@@ -153,6 +199,27 @@ public class RestService {
 		
 		return mapper.delRestRecMenu(param);
 	}
+		
 	
+	// 메뉴나타내는 곳     (추천메뉴 X!!)
+	public List<RestRecMenuVO> selRestMenus(RestPARAM param) {
+		return mapper.selRestMenus(param);
+	}
+	
+	
+	
+	
+	// 유저pk값이랑 쓴글쓴이랑 맞으면 true반환하고 insRestMenu()메뉴 발동함
+	private boolean _authFail(int i_rest, int i_user) {
+		RestPARAM param = new RestPARAM();
+		param.setI_rest(i_rest);
+		
+		RestDMI dbResult = mapper.selRest(param);
+		if(dbResult == null || dbResult.getI_user() != i_user) {
+			return true;
+		}
+		
+		return false;
+	}
 	
 }

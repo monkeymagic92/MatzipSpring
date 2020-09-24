@@ -8,7 +8,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 // HandlerInterceptorAdapter (얘는 스프링자체적으로 있는 내장객체)
 public class LoginCheckInterceptor extends HandlerInterceptorAdapter{
-	
+	static int chkNum = 0;
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
@@ -16,14 +16,18 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter{
 		String uri = request.getRequestURI();
 		String[] uriArr = uri.split("/");
 		
-		if(uriArr[1].equals("res")) { // resource(js, css, img) 그냥 통과 	 
+		System.out.println("uriArr.length : " + uriArr.length);
+		
+
+		if(uri.equals("/")) {
 			return true;
-		} else if (uriArr.length < 3) { // 주소가 이상하면 return 되면서 바로 제일하단 response.sendRedirect 문구가 실행됨
-										// 주소가 3차가 안되는순간 걍 false !
-			return false;
+		} else if(uriArr[1].equals("res")) { //리소스 (js, css, img)
+			return true;
 		}
 		
-		System.out.println("! ! !인 터 셉 터 잘 되 는 지 확 인 ! ! !");		
+		
+		chkNum++;
+		System.out.println("! ! !인 터 셉 터  ! ! !" + chkNum);		
 		boolean isLogout = SecurityUtils.isLogout(request);		
 		
 		switch(uriArr[1]) {

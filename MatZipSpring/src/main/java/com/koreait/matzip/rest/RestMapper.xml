@@ -1,112 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  mapper 하려면 DOCTYPE에 mapper 부분으로 입력해줘야됨 (마이바티스 xml이랑 비교해서 보기) -->
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- Rest 관련 DAO -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.koreait.matzip.rest.RestMapper">
 
-
-	
-	<select id="selRestList" parameterType="RestPARAM" resultType="RestDMI">
-		SELECT i_rest, nm, lat, lng
-		FROM t_restaurant		
-		WHERE lat BETWEEN #{sw_lat} AND #{ne_lat}
-		AND lng BETWEEN #{sw_lng} AND #{ne_lng};
-	</select>
-	
-	
-	<!-- 가게 등록(지도에 마커까지 찍히게) -->
 	<insert id="insRest" parameterType="RestPARAM">
 		INSERT INTO t_restaurant
 		(nm, addr, lat, lng, cd_category, i_user)
 		VALUES
-		(#{nm}, #{addr}, #{lat}, #{lng}, #{cd_category}, #{i_user});
+		(#{nm}, #{addr}, #{lat}, #{lng}, #{cd_category}, #{i_user})
 	</insert>
 	
-	
-	
-	<!-- 가게 디테일 띄우는 메소드 -->
-	<select id="selRest" parameterType="RestPARAM" resultType="RestDMI">
-		SELECT A.i_rest, A.nm, A.lat, A.lng, A.addr, A.i_user, A.hits
-		, ifnull(B.val, '') as cd_category_nm
-		, C.nm as user_nm
-		, ifnull(D.cnt, 0) as cnt_favorite
-		
-		FROM t_restaurant A
-		LEFT JOIN c_code_d B
-		ON A.cd_category = B.cd
-		AND B.i_m = 1
-		
-		LEFT JOIN t_user C
-		ON A.i_user = C.i_user
-		
-		LEFT JOIN (
-			SELECT i_rest, COUNT(i_rest) as cnt
-			FROM t_user_favorite
-			WHERE i_rest = #{i_rest}
-			GROUP BY i_rest
-			
-		) D
-		ON A.i_rest = D.i_rest
-		WHERE A.i_rest = #{i_rest}
-	</select>
-	
-	
-	
-	
-	<!-- n번 레스토랑 등록한 메뉴 띠우기 -->
-	<!-- and 메뉴(사진) 삭제하기 -->
-	<!-- if문은 i_user > 0 이고  seq > 0 일때 if문이 실행되고 
-		그게아니면 if문 쿼리문은 사용안되고 오리지널 쿼리문만 사용됨
-	 -->
-	<select id="selRestRecMenus" parameterType="RestPARAM" resultType="RestRecMenuVO">
-		SELECT A.seq, A.menu_nm, A.menu_price, A.menu_pic
-		FROM t_restaurant_recommend_menu A
-		<if test="i_user > 0">
-			INNER JOIN t_restaurant B
-			ON A.i_rest = B.i_rest
-			AND B.i_user = #{i_user}
-		</if>
-		WHERE A.i_rest = #{i_rest}
-		<if test="seq > 0">
-			AND A.seq = #{seq}
-		</if>
-	</select>
-	
-		 
-		
-		 
-	<!-- 삭제할때 레스토랑메뉴, 레스토랑 등 테이블 3개 동시에 날리기 위해  
-		트랜지션 사용
-		참고 : servlet-context 에서 <tx>태그 사용한곳 보기
-	-->
-	<delete id="delRestRecMenu" parameterType="RestPARAM">
-		DELETE A FROM t_restaurant_recommend_menu A
-		INNER JOIN t_restaurant B
-		ON A.i_rest = B.i_rest
-		WHERE B.i_rest = #{i_rest}
-		AND B.i_user = #{i_user}	
-		<if test="seq > 0">
-			AND A.seq = #{seq}
-		</if>
-	</delete>	
-	
-	<delete id="delRestMenu" parameterType="RestPARAM">
-		DELETE A FROM t_restaurant_menu A
-		INNER JOIN t_restaurant B
-		ON A.i_rest = B.i_rest
-		WHERE B.i_rest = #{i_rest}
-		AND B.i_user = #{i_user}		
-		<if test="seq > 0">
-			AND A.seq = #{seq}
-		</if>
-	</delete>	
-	
-	<delete id="delRest" parameterType="RestPARAM">
-		DELETE FROM t_restaurant
-		WHERE i_rest = #{i_rest}
-		AND i_user = #{i_user}
-	</delete>
-	<!-- -	-	-	-	-	-	-	-	-	-	-	- -->
 	
 	
 	<insert id="insRestRecMenu" parameterType="RestRecMenuVO">
@@ -118,6 +20,95 @@
 	</insert>
 	
 	
+	
+	<insert id="insRestMenu" parameterType="RestRecMenuVO">
+		INSERT INTO t_restaurant_menu
+		(i_rest, seq, menu_pic)
+		SELECT #{i_rest}, ifnull(max(seq), 0) + 1, #{menu_pic}
+		FROM t_restaurant_menu
+		WHERE i_rest = #{i_rest}
+	</insert>
+	
+	<select id="selRestList" parameterType="RestPARAM" resultType="RestDMI">
+		SELECT i_rest, nm, lat, lng
+		FROM t_restaurant
+		WHERE lat BETWEEN #{sw_lat} AND #{ne_lat}
+		AND lng BETWEEN #{sw_lng} AND #{ne_lng}
+	</select>
+	
+	<select id="selRest" parameterType="RestPARAM" resultType="RestDMI">
+		SELECT 
+			A.i_rest, A.nm, A.lat, A.lng, A.addr, A.i_user, A.hits
+			, ifnull(B.val, '') as cd_category_nm
+			, C.nm as user_nm
+			, ifnull(D.cnt, 0) as cnt_favorite
+		FROM t_restaurant A
+		LEFT JOIN c_code_d B
+			ON A.cd_category = B.cd
+			AND B.i_m = 1
+		LEFT JOIN t_user C
+			ON A.i_user = C.i_user
+		LEFT JOIN (
+			SELECT i_rest, COUNT(i_rest) as cnt 
+			FROM t_user_favorite
+			WHERE i_rest = #{i_rest}
+			GROUP BY i_rest
+		) D
+		ON A.i_rest = D.i_rest
+		WHERE A.i_rest = #{i_rest}
+	</select>
+	
+	<select id="selRestRecMenus" parameterType="RestPARAM" resultType="RestRecMenuVO">
+		SELECT A.seq, A.menu_nm, A.menu_price, A.menu_pic
+		FROM t_restaurant_recommend_menu A
+		WHERE A.i_rest = #{i_rest}
+		<if test="seq > 0">
+			AND A.seq = #{seq}
+		</if>
+	</select>
+	
+	<select id="selRestChkUser" parameterType="Integer" resultType="Integer">
+		SELECT i_user FROM t_restaurant
+		WHERE i_rest = #{i_rest}
+	</select>
+	
+	<select id="selRestMenus" parameterType="RestPARAM" resultType="RestRecMenuVO">
+		SELECT A.seq, A.menu_pic
+		FROM t_restaurant_menu A
+		WHERE A.i_rest = #{i_rest}
+		<if test="seq > 0">
+			AND A.seq = #{seq}
+		</if>
+	</select>
+	
+	<delete id="delRestRecMenu" parameterType="RestPARAM">
+		DELETE A FROM t_restaurant_recommend_menu A
+		INNER JOIN t_restaurant B
+		ON A.i_rest = B.i_rest
+		WHERE B.i_rest = #{i_rest}
+		AND B.i_user = #{i_user}
+		<if test="seq > 0">
+			AND A.seq = #{seq}
+		</if>
+	</delete>
+	
+	<delete id="delRestMenu" parameterType="RestPARAM">
+		DELETE A FROM t_restaurant_menu A
+		INNER JOIN t_restaurant B
+		ON A.i_rest = B.i_rest
+		WHERE B.i_rest = #{i_rest}
+		AND B.i_user = #{i_user}
+		<if test="seq > 0">
+			AND A.seq = #{seq}
+		</if>
+	</delete>
+	
+	
+	<delete id="delRest" parameterType="RestPARAM">
+		DELETE FROM t_restaurant
+		WHERE i_rest = #{i_rest}
+		AND i_user = #{i_user}
+	</delete>
 	
 	
 </mapper>

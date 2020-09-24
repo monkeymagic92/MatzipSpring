@@ -1,5 +1,6 @@
 package com.koreait.matzip.user.model;
 
+// DB에 있는 컬럼과 UserVO 값들이 일치해야됨 
 public class UserVO {
 	private int i_user;
 	private String user_id;

@@ -1,6 +1,5 @@
 package com.koreait.matzip.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -8,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +18,7 @@ import com.koreait.matzip.Const;
 import com.koreait.matzip.SecurityUtils;
 import com.koreait.matzip.ViewRef;
 import com.koreait.matzip.rest.model.RestDMI;
+import com.koreait.matzip.rest.model.RestFile;
 import com.koreait.matzip.rest.model.RestPARAM;
 import com.koreait.matzip.rest.model.RestRecMenuVO;
 
@@ -45,12 +46,12 @@ public class RestController {
 	@RequestMapping(value="/ajaxGetList", produces="application/json; charset=UTF-8")
 	@ResponseBody 
 	public List<RestDMI> ajaxGetList(RestPARAM param) {
-		System.out.println("restMap.jsp ajax(get)으로 보낸 값 제대로 받는지 확인 ");
-		System.out.println("sw_lat : " + param.getSw_lat());
-		System.out.println("sw_lng : " + param.getSw_lng());
-		System.out.println("ne_lat : " + param.getNe_lat());
-		System.out.println("ne_lng : " + param.getNe_lng());
-		System.out.println("--------------------------------");
+//		System.out.println("restMap.jsp ajax(get)으로 보낸 값 제대로 받는지 확인 ");
+//		System.out.println("sw_lat : " + param.getSw_lat());
+//		System.out.println("sw_lng : " + param.getSw_lng());
+//		System.out.println("ne_lat : " + param.getNe_lat());
+//		System.out.println("ne_lng : " + param.getNe_lng());
+//		System.out.println("--------------------------------");
 		
 		return service.selRestList(param);
 	}
@@ -90,20 +91,23 @@ public class RestController {
 	
 	
 	
-	// 디테일 화면 띄우는 메소드
-	@RequestMapping("/detail")
+//  디테일 화면 띄우는 메소드
+//	@RequestMapping("/detail")
+	@RequestMapping(value="/detail", method = RequestMethod.GET)
 	public String detail(Model model, RestPARAM param, RestRecMenuVO vo) {
 		
 		RestDMI data = service.selRest(param);
 		
+		model.addAttribute("menuList", service.selRestMenus(param));
 		model.addAttribute("recMenuList", service.selRestRecMenu(param));
 		
-		model.addAttribute("css", new String[]{"restDetail"});
-		model.addAttribute("data", data);
+		model.addAttribute("css", new String[]{"restaurant"});	// menuTemplate.jsp로 보냄
+		model.addAttribute("data", data);	// 여기서 detail.jsp 로 값을 날려서 ${data.i_rest} 가 jsp에서 가능한거임 
 		model.addAttribute(Const.TITLE, data.getNm()); //가게명
 		model.addAttribute(Const.VIEW, "rest/restDetail");
 		return ViewRef.TEMP_MENU_TEMP;
 	}
+	
 	
 	
 	
@@ -151,9 +155,33 @@ public class RestController {
 	public int ajaxDelRecMenu(RestPARAM param, HttpSession hs) {		
 		String path = "/resources/img/rest/" + param.getI_rest() + "/rec_menu/";
 		String realPath = hs.getServletContext().getRealPath(path);
+		
+		System.out.println("주소-	- Chk -		-");
+		System.out.println(path);
+		System.out.println(realPath);
 		param.setI_user(SecurityUtils.getLoginUserPk(hs)); //로긴 유저pk담기
 		return service.delRecMenu(param, realPath);
 	}	
+	
+	
+	
+	// detail.jsp에서 다중파일 등록할때 사용할 메소드
+	// 
+	@RequestMapping("/menus")
+	public String menus(@ModelAttribute RestFile param // ModelAttribute는 여태 객체박을때 썻어야됬지만 알아서 스프링이 안보이게 박아줌
+														// 인터페이스에서 public 생략하는거랑 같은거임 
+			, HttpSession hs
+			, RedirectAttributes ra) {
 		
-		
+		int i_user = SecurityUtils.getLoginUserPk(hs);
+		int result = service.insRestMenu(param, i_user);
+		System.out.println("1 result: " + result);
+		ra.addAttribute("i_rest", param.getI_rest());
+		return "redirect:/rest/detail";
+	}
 }
+
+	
+	
+	
+		

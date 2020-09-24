@@ -1,6 +1,6 @@
 package com.koreait.matzip.user.model;
 
-public class UserPARAM extends UserVO {
+public class UserPARAM extends UserVO {	
 	private String msg;
 
 	public String getMsg() {
