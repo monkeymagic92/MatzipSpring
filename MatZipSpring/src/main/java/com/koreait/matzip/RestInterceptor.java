@@ -15,6 +15,9 @@ public class RestInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	private RestMapper mapper;
 	
+	
+	// preHandel은 Controller 가기전 존재하는 녀석
+	// true면 쭉~ 다이렉트 진행  / false면 딱 잡히가꼬 끝남
 	@Override
 	public boolean preHandle(HttpServletRequest request, 
 			HttpServletResponse response, Object handler) throws Exception {	
@@ -32,7 +35,7 @@ public class RestInterceptor extends HandlerInterceptorAdapter {
 					return false;
 				}
 				
-				int i_user = SecurityUtils.getLoginUserPk(request);
+				int i_user = SecurityUtils.getLoginUserPk(request);  // 로그인한 사람의 i_user값 가져오기
 				
 				boolean result = _authSuccess(i_rest, i_user);
 				System.out.println("=== auth result : " + result);

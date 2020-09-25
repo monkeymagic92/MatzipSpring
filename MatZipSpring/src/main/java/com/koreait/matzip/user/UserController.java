@@ -56,7 +56,7 @@ public class UserController {
 		
 		if(result == Const.SUCCESS) {
 			hs.setAttribute(Const.LOGIN_USER, param); // service.login에서 넘어온 param값을 세션화 한다 
-			return "redirect:/rest/map";	// redirect: 는 실제로 스프링 내부에 구현되어있음 
+			return "redirect:/";	// redirect: 는 실제로 스프링 내부에 구현되어있음 
 									// ( 쉽게 그냥 response.sendRedirect 로 생각하면 될듯 ) ViewResolver는 jsp로 가는거니까 X!!
 		}
 		

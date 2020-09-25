@@ -20,6 +20,10 @@ a {
 .ml10 { margin-left: 10px; }
 .ml15 { margin-left: 15px; }
 
+.bg_black {
+	background-color: #000;
+}
+
 #container {
 	display: flex;
 	flex-direction: column;
@@ -41,26 +45,25 @@ a {
 }
 
 #container > header > #headerLeft > #headerLogout > a {
-	
 	color: blue;
 }
 
 #container > header > #headerRight {
-	padding-right: 40px;
+	padding-right: 50px;
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
 	flex-grow: 1;
-	
 }
 
 #container > header > #headerRight > a {
 	font-weight: bold;
-	font-size: 1.2em;
+	font-size: 1.4em;
 }
 
 #container > section {
 	flex-grow: 1;
+	overflow: auto;
 }
 
 #container > footer {
@@ -101,16 +104,3 @@ a {
 	height: 100%;
 	width: 100%;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

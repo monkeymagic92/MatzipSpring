@@ -1,0 +1,24 @@
+09/25
+
+구글 - swiper (슬라이드효과 나타내는 css사이트) 
+
+사용법 :
+메인화면에서 getStart 들어감
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">  min소스 jsp파일 제일상단에 복붙
+또는, http경로 들어가서 전체 복사한다음 나의 css파일에 넣어도되고.. 파일 다른이름으로 저장해서 css에 처넣어도되고
+
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>  스크립부분에 복붙
+
+
+-	-	-	-	-	-	-	-	-	-	-	-
+
+
+css 효과
+( 어떤행위가 이루어질때 1초동안 그행위를 서서히 실행하겠다 )
+transition: 1s; 
+
+
+-	-	-	-	-	-	-	-	-	-	-	-
+
+

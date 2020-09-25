@@ -8,8 +8,8 @@
 <head>
 <meta charset="UTF-8">
 <title>${title}</title>
-<link rel="stylesheet" type="text/css" href="/res/css/common.css">
-<link rel="styleshhet" type="text/css" href="res/css/restaurant.css">
+<link rel="stylesheet" type="text/css" href="/res/css/common.css?abc=11">
+<link rel="styleshhet" type="text/css" href="res/css/restaurant.css?abc=11">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <c:forEach items="${css}" var="item">
 <link rel="stylesheet" type="text/css" href="/res/css/${item}.css">

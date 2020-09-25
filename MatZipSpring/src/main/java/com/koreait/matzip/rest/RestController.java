@@ -98,16 +98,25 @@ public class RestController {
 		
 		RestDMI data = service.selRest(param);
 		
-		model.addAttribute("menuList", service.selRestMenus(param));
+		//model.addAttribute("menuList", service.selRestMenus(param)); detail.jsp 에도 menuList부분 주석처리해놨음
 		model.addAttribute("recMenuList", service.selRestRecMenu(param));
 		
-		model.addAttribute("css", new String[]{"restaurant"});	// menuTemplate.jsp로 보냄
+		model.addAttribute("css", new String[]{"restaurant", "swiper-bundle.min"});	// menuTemplate.jsp로 보냄
 		model.addAttribute("data", data);	// 여기서 detail.jsp 로 값을 날려서 ${data.i_rest} 가 jsp에서 가능한거임 
 		model.addAttribute(Const.TITLE, data.getNm()); //가게명
 		model.addAttribute(Const.VIEW, "rest/restDetail");
 		return ViewRef.TEMP_MENU_TEMP;
 	}
 	
+	
+	
+	// ajax로 메뉴사진들 가져올 용도
+	// detail.jsp 자스 참고 
+	@RequestMapping("/ajaxSelMenuList")
+	@ResponseBody
+	public List<RestRecMenuVO> ajaxSelMenuList(RestPARAM param) {
+		return service.selRestMenus(param);
+	}
 	
 	
 	
@@ -164,9 +173,17 @@ public class RestController {
 	}	
 	
 	
+	// 메뉴 삭제 하는곳(아작스로 실행함) detail.jsp 자스부분 참고
+	@RequestMapping("/ajaxDelMenu")
+	@ResponseBody 
+	public int ajaxDelRecMenu(RestPARAM param) { // i_rest, seq, menu_pic 값을 detail.jsp로 보냄
+		System.out.println("2");
+		return service.delRestMenu(param); // 제대로 삭제됬다면 json형태로 1로 return함 (서비스참고)
+	}
 	
-	// detail.jsp에서 다중파일 등록할때 사용할 메소드
-	// 
+	
+	
+	// detail.jsp에서 다중파일 등록할때 사용할 메소드	 
 	@RequestMapping("/menus")
 	public String menus(@ModelAttribute RestFile param // ModelAttribute는 여태 객체박을때 썻어야됬지만 알아서 스프링이 안보이게 박아줌
 														// 인터페이스에서 public 생략하는거랑 같은거임 

@@ -77,9 +77,7 @@ public class RestService {
 		return mapper.delRestRecMenu(param);
 	}
 	
-	public int delRestMenu(RestPARAM param) {
-		return mapper.delRestMenu(param);
-	}
+	
 	//-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
 	
 	// 파일 추가하기
@@ -199,7 +197,25 @@ public class RestService {
 		
 		return mapper.delRestRecMenu(param);
 	}
-		
+	
+	public int delRestMenu(RestPARAM param) {
+		if(param.getMenu_pic() != null && !"".equals(param.getMenu_pic())) {
+			String path = Const.realPath + "/resources/img/rest/" + param.getI_rest() + "/menu/";
+			
+			
+			
+		    if(FileUtils.delFile(path + param.getMenu_pic())) {		    	
+		    	return mapper.delRestMenu(param);
+		    	
+		    } else {		    	
+		    	return Const.FAIL;
+		    }
+		}
+		return mapper.delRestMenu(param);
+	}
+	
+	
+	
 	
 	// 메뉴나타내는 곳     (추천메뉴 X!!)
 	public List<RestRecMenuVO> selRestMenus(RestPARAM param) {
@@ -221,5 +237,8 @@ public class RestService {
 		
 		return false;
 	}
+	
+	
+	
 	
 }
