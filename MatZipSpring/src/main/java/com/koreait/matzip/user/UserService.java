@@ -53,6 +53,20 @@ public class UserService {
 		
 		return mapper.insUser(param);
 	}
+	
+	
+	// 좋아요 눌렀을떄 아작트 통신기법으로 Controller로 보냄
+	public int ajaxToggleFavorite(UserPARAM param) { // i_user, i_rest, proc_type 값이 param에 담겨있음 
+		switch(param.getProc_type()) {
+		case "ins":
+			return mapper.insFavorite(param);
+			
+		case "del":
+			return mapper.delFavorite(param);
+		}
+		
+		return 0;
+	}
 
 	
 }

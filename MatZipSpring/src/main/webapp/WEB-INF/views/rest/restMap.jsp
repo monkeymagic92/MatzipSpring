@@ -72,6 +72,14 @@
 			centerSpan.className = 'center'
 			centerSpan.innerText = item.nm
 			
+			// 지도에 좋아요 눌렀을시 하트 추가하는 코드 
+			var restNm = item.nm
+			if(item.is_favorite == 1) {
+				restNm += ' ♥'	
+			}
+			
+			centerSpan.innerText = restNm
+						
 			content.appendChild(leftSpan)
 			content.appendChild(centerSpan)
 			content.appendChild(rightSpan)			

@@ -35,6 +35,7 @@
 					<div class="ml10"><a href="/user/logout">로그아웃</a></div>
 				</c:if>
 				<c:if test="${loginUser == null }">
+				
 					<div class="ml10"><a href="/user/login">로그인</a></div>
 				</c:if>
 								

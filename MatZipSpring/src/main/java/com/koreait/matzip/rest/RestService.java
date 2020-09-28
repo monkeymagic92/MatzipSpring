@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import com.koreait.matzip.rest.model.RestDMI;
 import com.koreait.matzip.rest.model.RestFile;
 import com.koreait.matzip.rest.model.RestPARAM;
 import com.koreait.matzip.rest.model.RestRecMenuVO;
+import com.koreait.matzip.user.model.UserPARAM;
 
 
 
@@ -198,6 +200,8 @@ public class RestService {
 		return mapper.delRestRecMenu(param);
 	}
 	
+	
+	
 	public int delRestMenu(RestPARAM param) {
 		if(param.getMenu_pic() != null && !"".equals(param.getMenu_pic())) {
 			String path = Const.realPath + "/resources/img/rest/" + param.getI_rest() + "/menu/";
@@ -240,5 +244,35 @@ public class RestService {
 	
 	
 	
+	
+	// 조회수 기능 ( user pk값으로 막으려면 테이블 하나 더 빼서 boardWeb4 버전으로 만들어야 됨)
+	
+	// 현재 내 ip로 접속했을경우 그 ip를 확인하고 null 이거나 현재 마지막 i_rest번의 게시글에
+	// 들어있는 ip값이 아니라면 hits를 올림  그리고 올린후 다시 마지막 ip주소값을 currentReadIp에다가 담음
+	// 코드 잘읽어보면 이해될거임
+	public void updAddHits(RestPARAM param, HttpServletRequest req) {
+		
+		// 접속한 현재 ip주소값을 가져오는 것
+		String myIp = req.getRemoteAddr();	// ( a라는컴터로 들어오면 a컴터 ip, b 컴터 는 b컴터 ip )
+		ServletContext ctx = req.getServletContext();
+		 
+		int i_user = SecurityUtils.getLoginUserPk(req);
+		
+		//ServletContext = 서블릿에서 Application 이라고 보면됨 ( 어플 = 서버1개당 1개의 객체만 존재 ) 
+		
+		
+		// 5번방, 10번방 이렇게 getI_rest()식으로 생성되어 어플케이션한테 물어보고 null 이라면 처음들어간 페이지란 뜻 ( 즉, 조회수 올리자 ! ) 
+		String currentReadIp = (String)ctx.getAttribute(Const.CURRENT_REST_READ_IP + param.getI_rest());
+		if(currentReadIp == null || !currentReadIp.equals(myIp)) {
+			
+			param.setI_user(i_user); // 내가 쓴글이면 조회수 안 올라가게 쿼리문으로 막기용
+			
+			// 조회수 올림 처리 할때
+			mapper.updAddHits(param);
+			ctx.setAttribute(Const.CURRENT_REST_READ_IP + param.getI_rest(), myIp);
+		}
+	}
+	
+		
 	
 }

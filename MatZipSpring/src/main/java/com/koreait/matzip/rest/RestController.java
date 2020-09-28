@@ -2,6 +2,7 @@ package com.koreait.matzip.rest;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +46,18 @@ public class RestController {
 													// 리턴할떄  	cahrset=UTF-8 로 인코딩 해주자! 란것
 	@RequestMapping(value="/ajaxGetList", produces="application/json; charset=UTF-8")
 	@ResponseBody 
-	public List<RestDMI> ajaxGetList(RestPARAM param) {
+	public List<RestDMI> ajaxGetList(RestPARAM param, HttpSession hs) {
 //		System.out.println("restMap.jsp ajax(get)으로 보낸 값 제대로 받는지 확인 ");
 //		System.out.println("sw_lat : " + param.getSw_lat());
 //		System.out.println("sw_lng : " + param.getSw_lng());
 //		System.out.println("ne_lat : " + param.getNe_lat());
 //		System.out.println("ne_lng : " + param.getNe_lng());
 //		System.out.println("--------------------------------");
+		
+		// 지도에 좋아요 눌렀을경우 하트가 나오게 하기 
+		int i_user = SecurityUtils.getLoginUserPk(hs); 
+		param.setI_user(i_user);
+		// -	-	-	-	-	-	-	-	-	-	-
 		
 		return service.selRestList(param);
 	}
@@ -94,9 +100,18 @@ public class RestController {
 //  디테일 화면 띄우는 메소드
 //	@RequestMapping("/detail")
 	@RequestMapping(value="/detail", method = RequestMethod.GET)
-	public String detail(Model model, RestPARAM param, RestRecMenuVO vo) {
+	public String detail(Model model, RestPARAM param
+			, RestRecMenuVO vo, HttpServletRequest req) {
+		
+		// -	-	-  조회수 기능 	-	-	-
+		service.updAddHits(param, req);
+		//-	-	-	-	-	-	-	-	-
+		
+		int i_user = SecurityUtils.getLoginUserPk(req);
+		param.setI_user(i_user);
 		
 		RestDMI data = service.selRest(param);
+
 		
 		//model.addAttribute("menuList", service.selRestMenus(param)); detail.jsp 에도 menuList부분 주석처리해놨음
 		model.addAttribute("recMenuList", service.selRestRecMenu(param));
@@ -106,6 +121,7 @@ public class RestController {
 		model.addAttribute(Const.TITLE, data.getNm()); //가게명
 		model.addAttribute(Const.VIEW, "rest/restDetail");
 		return ViewRef.TEMP_MENU_TEMP;
+		
 	}
 	
 	
@@ -113,7 +129,7 @@ public class RestController {
 	// ajax로 메뉴사진들 가져올 용도
 	// detail.jsp 자스 참고 
 	@RequestMapping("/ajaxSelMenuList")
-	@ResponseBody
+	@ResponseBody	
 	public List<RestRecMenuVO> ajaxSelMenuList(RestPARAM param) {
 		return service.selRestMenus(param);
 	}
@@ -197,8 +213,5 @@ public class RestController {
 		return "redirect:/rest/detail";
 	}
 }
-
-	
-	
 	
 		

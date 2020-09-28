@@ -40,6 +40,7 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter{
 				}
 			}
 			
+			
 		case ViewRef.URI_REST: // 1차 주소값이 rest 라면... (위에글읽어라)
 			switch(uriArr[2]) {
 			case "reg":

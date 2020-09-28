@@ -11,6 +11,7 @@ public class Const {
 		
 	// 세션값으로 사용될 로그인 유저
 	public static final String LOGIN_USER = "loginUser";
+	public static final String CURRENT_REST_READ_IP = "currentRestReadIp";
 	
 	public static final int FAIL = 0;
 	public static final int SUCCESS = 1;	// 로그인성공 (참고 : UserService)

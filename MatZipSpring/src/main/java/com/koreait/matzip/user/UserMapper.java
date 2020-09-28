@@ -13,6 +13,16 @@ import com.koreait.matzip.user.model.UserVO;
 // DAO 만드는용임
 @Mapper
 public interface UserMapper {
+	// 좋아요 눌렀을떄 추가하는 메소드
+	public int insFavorite(UserVO param);
+	
+	// 좋아요 눌렀을때 값 빼는 메소드
+	public int delFavorite(UserPARAM param);
+	
+	
 	public int insUser(UserVO param);
 	public UserDMI selUser(UserPARAM param);
 }
+
+
+ 

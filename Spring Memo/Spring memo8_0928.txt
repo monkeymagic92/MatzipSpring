@@ -1,0 +1,29 @@
+09/28
+
+-	-	-	-	-	-	-	-	-	-	-
+
+
+구글(브라우저) 시크릿모드의 중요성
+
+오늘 1시간동안 계속 서버 리셋하고 안됬었는데 캐시 지워주니 됬음
+시크리모드 : 브라우저가 알아서 나의 검색기록 , 캐시를 자동으로 계속 지워줌 
+
+
+-	-	-	-	-	-	-	-	-	-	-
+
+좋아요 기능구현
+ajax를 Controller.java 에서 구현할때 매개변수 @RequestBody 이거 빼기 ( POST방식에만 넣는건가 ? 아직잘모르겠음 ) 
+
+UserController.java / restDatile.jsp / UserMapper.xml and java / DB : t_user_favorite
+
+
+-	-	-	-	-	-	-	-	-	-	-
+
+
+조회수 기능 구현
+RestController.java  =  url:detail
+restDetail.jsp
+
+
+
+-	-	-	-	-	-	-	-	-	-	-
